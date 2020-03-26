@@ -1,0 +1,80 @@
+<div class="main-content">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+            </script>
+    
+            <ul class="breadcrumb">
+                <li>
+                    <i class="icon-home home-icon"></i>
+                    <a href="#">首页</a>
+                </li>
+                <li class="active">管理员添加</li>
+            </ul><!-- .breadcrumb -->
+        </div>
+    
+        <div class="page-content">
+                <div class="row">
+                
+    
+                        <div class="col-xs-12">
+                        
+                        <form class="form-horizontal" role="form" action="{:url('brand/upd_do')}" method="post" enctype="multipart/form-data" >
+                            <input type="hidden" name="brand_id" value="{$data.brand_id}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 品牌名称 </label>
+    
+                            <div class="col-sm-9">
+                                <input type="text" name="brand_name" value="{$data.brand_name}" id="form-field-1" placeholder="品牌名 " class="col-xs-10 col-sm-5" />
+                            </div>
+                        </div>
+    
+                        <div class="space-4"></div>
+    
+                       
+    
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2">品牌logo</label>
+    
+                            <div class="col-sm-9">
+                                <img src="/img/{$data.brand_logo}" height="90">
+                                <input type="file" name="brand_logo" id="form-field-2"  value=""/>
+                                
+                            </div>
+                        </div>
+    
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 品牌网址 </label>
+    
+                            <div class="col-sm-9">
+                                <input type="text" name="brand_url" value="{$data.brand_url}" id="form-field-2" placeholder="网址" class="col-xs-10 col-sm-5" />
+                            </div>
+                        </div>
+                        
+                        <div class="space-4"></div>
+                    
+                        <div class="clearfix form-actions">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn btn-info" type="submit">
+                                    <i class="icon-ok bigger-110"></i>
+                                    修改
+                                </button>
+    
+                                &nbsp; &nbsp; &nbsp;
+                                <button class="btn" type="reset">
+                                    <i class="icon-undo bigger-110"></i>
+                                    重置
+                                </button>
+                            </div>
+                        </div>
+    
+                        <div class="hr hr-24"></div>
+    
+    
+    
+                    </form>
+                        </div><!-- /span -->
+                    </div><!-- /row -->
+    
+        </div><!-- /.page-content -->
+    </div><!-- /.main-content -->

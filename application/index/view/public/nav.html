@@ -1,0 +1,101 @@
+<div class="top">
+    <div class="logo"><a href="Index.html"><img src="/static/index/images/logo.png" /></a></div>
+    <div class="search">
+    	<form>
+        	<input type="text" value="" class="s_ipt" />
+            <input type="submit" value="搜索" class="s_btn" />
+        </form>                      
+        <span class="fl"><a href="#">咖啡</a><a href="#">iphone 6S</a><a href="#">新鲜美食</a><a href="#">蛋糕</a><a href="#">日用品</a><a href="#">连衣裙</a></span>
+    </div>
+    <div class="i_car">
+    	<div class="car_t">购物车 [ <span>...</span> ]</div>
+        <div class="car_bg">
+            {if $Think.session.userInfo==''}  
+       		<!--Begin 购物车未登录 Begin-->
+        	<div class="un_login">
+                还未登录！
+                <a href="Login.html" style="color:#ff4e00;">
+                    马上登录
+                </a>
+                 查看购物车！
+            </div>
+            {else}
+            &nbsp;&nbsp;欢迎<font color=red>{$Think.session.userInfo.user_account}</font>登录
+            &nbsp;|
+            {/if}
+            <!--End 购物车未登录 End-->
+            <!--Begin 购物车已登录 Begin-->
+            <ul class="cars">
+                {volist name="navInfo" id="v"}
+            	<li>
+                	<div class="img"><a href="#"><img src="/img/{$v.goods_img}" width="58" height="58" /></a></div>
+                    <div class="name"><a href="#">{$v.goods_name}</a></div>
+                    <div class="price">
+                        <font color="#ff4e00">￥{$v.goods_price}</font> 
+                        X
+                        <font color="#ff4e00">{$v.buy_number}</font>
+                    </div>
+                </li>
+                {/volist}
+            </ul>
+            <div class="price_sum">共计&nbsp; <font color="#ff4e00">￥</font><span>....</span></div>
+            <div class="price_a"><a href="{:url('cart/cart_list')}">去购物车结算</a></div>
+            <!--End 购物车已登录 End-->
+        </div>
+    </div>
+</div>
+<!--End Header End--> 
+<!--Begin Menu Begin-->
+<div class="menu_bg">
+	<div class="menu">
+    	<!--Begin 商品分类详情 Begin-->    
+    	<div class="nav">
+            <div class="nav_t">全部商品分类</div>
+            <?php
+                $controller=request()->controller();
+                if($controller=='Index'){
+                   $c="leftNav";
+                }else{
+                    $c="leftNav none";
+                }
+            ?>
+            <div class="{$c}">
+                <ul>      
+                    {volist name="leftInfo" id="v"}
+                    <li>
+                    	<div class="fj">
+                        	<span class="n_img"><span></span><img src="/static/index/images/nav1.png" /></span>
+                            <span class="fl">{$v.cate_name}</span>
+                        </div>
+                        <div class="zj" style="top:-{$key*40}px">
+                            <div class="zj_l">
+                                {volist name="v['child']" id="vv"}
+                                <div class="zj_l_c">
+                                    <h2>{$vv.cate_name}</h2>
+                                    {volist name="vv['child']" id="vvv"}
+                                    <a href="#">{$vvv.cate_name}</a>
+                                    {/volist}
+                                </div>  
+                                {/volist}                              
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="/static/index/images/n_img1.jpg" width="236" height="200" /></a>
+                                <a href="#"><img src="/static/index/images/n_img2.jpg" width="236" height="200" /></a>
+                            </div>
+                        </div>
+                    </li>   
+                    {/volist}                                   	
+                </ul>            
+            </div>
+        </div>  
+        <!--End 商品分类详情 End-->                                                     
+    	<ul class="menu_r">
+            <li><a href="Index.html">首页</a></li>
+            <li><a href="{:url('goods/goods_list')}">全部商品</a></li>
+            {foreach $cateInfo as $k=>$v}
+            <li><a href="{:url('goods/goods_list',['cate_id'=>$v.cate_id])}">{$v.cate_name}</a></li>
+            {/foreach}
+        </ul>
+        <div class="m_ad">中秋送好礼！</div>
+    </div>
+</div>

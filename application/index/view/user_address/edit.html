@@ -1,0 +1,88 @@
+{include file="public/searsh"}
+<!--End Header End--> 
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+	<div class="m_content">
+   		{include file="public/left"}
+		<div class="m_right">
+           
+            <form action="{:url('addressUpd')}" method="post">
+              <table border="0" class="add_tab" style="width:930px;"  cellspacing="0" cellpadding="0">
+                <input type="hidden" name="address_id" value="{$addressInfo.address_id}">
+                <tr>
+                  <td width="135" align="right">配送地区</td>
+                  <td colspan="3" style="font-family:'宋体';">
+                    <select class="area" name="province">
+                        <option value="0" selected="selected">请选择...</option>
+                        {volist name="provinceInfo" id="v"}
+                        <option value="{$v.id}" {$addressInfo.province==$v.id ? "selected" : ""}>{$v.name}</option>
+                        {/volist}
+                      </select>
+                      <select class="area" name="city">
+                        <option value="0" selected="selected">请选择...</option>
+                        {volist name="cityInfo" id="v"}
+                        <option value="{$v.id}" {$addressInfo.city==$v.id ? "selected" : ""}>{$v.name}</option>
+                        {/volist}
+                      </select>
+                      <select class="area" name="area">
+                        <option value="0" selected="selected">请选择...</option>
+                        {volist name="areaInfo" id="v"}
+                        <option value="{$v.id}" {$addressInfo.area==$v.id ? "selected" : ""}>{$v.name}</option>
+                        {/volist}
+                      </select>
+                      （必填）
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right">收货人姓名</td>
+                  <td style="font-family:'宋体';"><input type="text" class="add_ipt" name="address_name" value="{$addressInfo.address_name}"/>（必填）</td>
+                  <td align="right">手机号</td>
+                  <td style="font-family:'宋体';"><input type="text" class="add_ipt" name="address_tel" value="{$addressInfo.address_tel}"/>（必填）</td>
+                </tr>
+                <tr>
+                  <td align="right">详细地址</td>
+                  <td style="font-family:'宋体';"><input type="text" class="add_ipt" name="address_detail" value="{$addressInfo.address_detail}"/>（必填）</td>
+                  <td align="right">邮政编码</td>
+                  <td style="font-family:'宋体';"><input type="text" class="add_ipt" name="address_mail" value="{$addressInfo.address_mail}"/></td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                      <input type="checkbox" value="1" name="is_default" {$addressInfo.is_default=='1' ? 'checked' : ''}>设置为默认收货地址
+                    </td>
+                </tr>
+              </table>
+              <p align="right">
+                <input type="submit" value="编辑">&nbsp;&nbsp;
+              </p> 
+           </form>
+
+            
+        </div>
+    </div>
+	<!--End 用户中心 End--> 
+<script>
+$(function(){
+  //给select绑定内容改变事件
+  $(document).on("change",".area",function(){
+    var _this = $(this);  //发生内容改变事件的selece
+    //把option清空
+    _this.nextAll("select").html("<option value=''>请选择...</option>");
+    //获取到当前的省份id
+    var id = _this.val();
+    $.post(
+      "{:url('getArea')}",
+      {id:id},
+      function(res){
+        var _option = "<option value=''>请选择...</option>";
+        for(var i in res){
+          _option += "<option value='"+res[i]['id']+"'>"+res[i]['name']+"</option>";
+        }
+        _this.next("select").html(_option)
+      },
+      'json'
+    )      
+  })
+})
+ 
+ 
+ </script>

@@ -1,0 +1,354 @@
+{include file="public/nav"}
+<!--Begin Menu Begin-->
+<script type="text/javascript" src="/static/index/js/n_nav.js"></script>    
+
+<!--End Menu End--> 
+<div class="i_bg">  
+    <div class="content mar_20">
+    	<img src="/static/index/images/img1.jpg" />        
+    </div>
+    
+    <!--Begin 第一步：查看购物车 Begin -->
+    <div class="content mar_20">
+    	<table border="0" class="car_tab" style="width:1200px; margin-bottom:50px;" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><input type="checkbox" id="allBox"></td>
+            <td class="car_th" width="490">商品名称</td>
+            <td class="car_th" width="140">单价</td>
+            <td class="car_th" width="150">购买数量</td>
+            <td class="car_th" width="130">小计</td>
+            <td class="car_th" width="150">操作</td>
+          </tr>
+          {volist name="cartInfo" id="v"}
+          <tr class="t" goods_id="{$v.goods_id}">
+            <td><input type="checkbox" class="box"></td>
+            <td>
+            	<div class="c_s_img">
+                    <img src="/img/{$v.goods_img}" width="73" height="73" />
+                </div>
+                {$v.goods_name}
+            </td>
+            <td align="center">{$v.goods_price}</td>
+            <td align="center">
+            	<div class="c_num" goods_num="{$v.goods_num}">
+                    <input type="button"  class="car_btn_1 less" />
+                	<input type="text" value="{$v.buy_number}"  class="car_ipt buy_number" />  
+                    <input type="button" class="car_btn_2 add" />
+                </div>
+            </td>
+            <td align="center" style="color:#ff4e00;">
+                ￥{$v.goods_price*$v.buy_number}
+            </td>
+            <td align="center">
+                <a class="del">
+                删除
+                </a>
+                &nbsp; &nbsp;
+                <a href="#">
+                    加入收藏
+                </a>
+            </td>
+          </tr>
+          {/volist}
+          <tr height="70">
+              <td colspan="6" style="font-family:'Microsoft YaHei'; border-bottom:0;">
+                <label class="r_rad">
+                </label>
+                <label class="r_txt" id="delMony">
+                    删除已选中的商品
+                </label>
+                <span class="fr">商品总价：<b style="font-size:22px; color:#ff4e00;" id="money">￥0</b></span>
+            </td>
+          </tr>
+          <tr valign="top" height="150">
+          	<td colspan="6" align="right">
+            	<a href="javascript:;">
+                    <img src="/static/index/images/buy1.gif" />
+                </a>
+                &nbsp; &nbsp; 
+                <a href="javascript:;" id="confirmSettlement">
+                    <img src="/static/index/images/buy2.gif" />
+                </a>
+            </td>
+          </tr>
+        </table>
+        
+    </div>
+	<!--End 第一步：查看购物车 End--> 
+    
+    
+    <!--Begin 弹出层-删除商品 Begin-->
+    <div id="fade" class="black_overlay"></div>
+    <div id="MyDiv" class="white_content">             
+        <div class="white_d">
+            <div class="notice_t">
+                <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv('MyDiv','fade')"><img src="/static/index/images/close.gif" /></span>
+            </div>
+            <div class="notice_c">
+           		
+                <table border="0" align="center" style="font-size:16px;" cellspacing="0" cellpadding="0">
+                  <tr valign="top">
+                    <td>您确定要把该商品移除购物车吗？</td>
+                  </tr>
+                  <tr height="50" valign="bottom">
+                    <td><a href="#" class="b_sure">确定</a><a href="#" class="b_buy">取消</a></td>
+                  </tr>
+                </table>
+                    
+            </div>
+        </div>
+    </div>    
+    <!--End 弹出层-删除商品 End-->
+<script>
+//页面加载
+$(function(){
+    //点击+号
+    $(document).on("click",".add",function(){
+        var _this = $(this);    //当前点击的+号按钮
+        //1、(1)文本框的值+1  页面特效+1 
+        var buy_number = parseInt(_this.prev("input").val());   //购买数量
+        var goods_num = parseInt(_this.parent().attr("goods_num")); //库存
+        if(buy_number>=goods_num){
+            _this.prev("input").val(goods_num);
+            buy_number=goods_num;
+        }else{
+            buy_number = buy_number+1;
+            _this.prev("input").val(buy_number);
+        }
+        //(2)文本框的值+1 数据库变
+        var goods_id = _this.parents("tr").attr("goods_id");
+        // console.log(goods_id);
+        checkNumber(goods_id,buy_number);
+        //2、重新获取小计
+        getTotal(goods_id,_this);
+        //3、给当前行背景色 改变
+        trColor(_this);
+        //4、当前行复选框选中
+        trChecked(_this);
+        //5、重新获取总价
+        getMoney();
+    })
+    //点击-号
+    $(document).on("click",".less",function(){
+        var _this = $(this);
+        //1、(1)获取文本框的值-1 页面特效
+        var buy_number = parseInt(_this.next('input').val());  //购买数量
+        if(buy_number<=1){
+            _this.next('input').val(1);
+            buy_number = 1;
+        }else{
+            buy_number = buy_number-1;
+            _this.next('input').val(buy_number);
+        }
+        // console.log(buy_number);
+        //(2)文本框的值-1 数据库变
+        var goods_id = _this.parents("tr").attr("goods_id");
+        checkNumber(goods_id,buy_number);
+        //2、重新获取小计
+        getTotal(goods_id,_this);
+        //3、给当前行背景色 改变
+        trColor(_this);
+        //4、当前行复选框选中
+        trChecked(_this);
+        //5、重新获取总价
+        getMoney();
+    })
+    //文本框失去焦点
+    $(document).on("blur",".buy_number",function(){
+        var _this = $(this);
+        //验证文本框的值
+        var buy_number = parseInt(_this.val());  //购买数量
+        var goods_num = parseInt(_this.parent().attr("goods_num"));  //库存
+        var reg = /^\d{1,}$/;
+        if(buy_number==''){
+            _this.val(1);
+            buy_number=1;
+        }else if(!reg.test(buy_number)){
+            _this.val(1);
+            buy_number=1;
+        }else if(buy_number>=goods_num){
+            _this.val(goods_num);
+            buy_number=goods_num;
+        }else{
+            _this.val(parseInt(buy_number));
+            buy_number=parseInt(buy_number);
+        }
+        //改变数据库的购买数量
+        var goods_id = _this.parents("tr").attr("goods_id");
+        checkNumber(goods_id,buy_number);
+        //2、重新获取小计
+        getTotal(goods_id,_this);
+        //3、给当前行背景色 改变
+        trColor(_this);
+        //4、当前行复选框选中
+        trChecked(_this);
+        //5、重新获取总价
+        getMoney();
+    })
+    //点击复选框
+    $(document).on("click",".box",function(){
+        var _this = $(this);
+        //查看该复选框是否选中
+        var status = _this.prop('checked');
+        //给当前行背景色改变
+        if(status==true){
+            //加颜色（加样式）
+            trColor(_this)
+        }else{
+            //去颜色（删样式）
+            _this.parents("tr").removeClass("car_tr");
+            //取消全选的默认选中
+            $("#allBox:checkbox").removeAttr("checked");
+        }
+        //重新获取总价
+        getMoney()
+    })
+    //点击全选
+    $(document).on("click","#allBox",function(){
+        //查看该复选框是否选中
+        var status = $("#allBox").prop('checked');
+        //1、给所有复选框选中
+        $(".box").prop('checked',status);
+        //2、给所有行改变背景色
+        if(status==true){
+            //加颜色（加样式）
+            $(".t").addClass("car_tr");
+        }else{
+            //去颜色（删样式）
+            $(".t").removeClass("car_tr");
+        }
+        //3、重新获取总价
+        getMoney();
+    })
+    //点击删除
+    $(document).on("click",".del",function(){
+        var _this = $(this);
+        var goods_id = _this.parents("tr").attr("goods_id");
+        // console.log(goods_id);
+        $.post(
+            "{:url('cartDel')}",
+            {goods_id:goods_id},
+            function(res){
+                // console.log(res);
+                if(res.code==1){
+                    //删除成功
+                    _this.parents("tr").remove();
+                }else{
+                    //删除失败
+                    alert(res.font);
+                }
+            },
+            'json'
+        );
+    })
+    // 点击'删除选中的商品'
+    $(document).on("click","#delMony",function(){
+        var _box = $(".box:checked");
+        if(_box.length>0){
+            //循环得到每一个复选框的商品id
+            var goods_id='';
+            _box.each(function(index){
+                goods_id += $(this).parents("tr").attr('goods_id')+',';
+            })
+            goods_id = goods_id.substr(0,goods_id.length-1);
+            //通过ajax把商品id传给控制器
+            $.post(
+                "{:url('cartDel')}",
+                {goods_id:goods_id},
+                function(res){
+                    // console.log(res);
+                    if(res.code==1){
+                        //删除成功
+                        _box.each(function(index){
+                            $(this).parents("tr").remove();
+                        })
+                        //重新获取总价
+                        $("#money").text("￥0");
+                    }else{
+                        //删除失败
+                        alert(res.font);
+                    }
+                },
+                'json'
+            );
+        }else{           
+            alert('请至少选择一件商品进行删除');
+        }
+    })
+    //点击确认结算
+    $(document).on("click","#confirmSettlement",function(){
+        //检测是否选中了复选框
+        var _box = $(".box:checked");
+        if(_box.length>0){
+            //得到选中的复选框的商品id
+            var goods_id = '';
+            _box.each(function(index){
+                goods_id += $(this).parents("tr").attr('goods_id')+',';
+            })
+            goods_id = goods_id.substr(0,goods_id.length-1);    //截取
+            location.href="{:url('cart/confirmSettlement')}?goods_id="+goods_id;
+        }else{
+            //一件商品未选中
+            alert('请至少选择一件商品进行结算');
+        }
+    })
+    //更改购买数量
+    function checkNumber(goods_id,buy_number){
+        //通过ajax传给控制器 一定要用ajax同步
+        $.ajax({
+            url:"{:url('checkNumber')}",
+            type:'post',
+            data:{goods_id:goods_id,buy_number:buy_number},
+            async:false,
+            dataType:'json',
+            sussecc:function(res){
+                // console.log(res);
+                if(res.code==2){
+                    alert(res.font);
+                }
+            }
+        })
+    }
+    //重新获取小计
+    function getTotal(goods_id,_this){
+        $.post(
+            "{:url('getTotal')}",
+            {goods_id:goods_id},
+            function(res){
+                // console.log(res);
+                _this.parents("td").next("td").text("￥"+res);
+            }
+        )
+    }
+    //给当前行背景色改变
+    function trColor(_this){
+        _this.parents("tr").addClass("car_tr");
+    }
+    //当前行复选框选中
+    function trChecked(_this){
+        _this.parents("tr").find(".box").prop("checked",true);
+    }
+    //获取总价
+    function getMoney(){
+        //获取到选中的复选框的商品id 
+        var _box = $(".box:checked");
+        var goods_id = '';
+        _box.each(function(index){
+            //每一个选中的复选框的商品id
+            goods_id+= $(this).parents("tr").attr("goods_id")+',';
+        })
+        //取出右边的‘,’截取
+        goods_id=goods_id.substr(0,goods_id.length-1);
+        // console.log(goods_id);
+        //通过ajax传给控制器
+        $.post(
+            "{:url('getMoney')}",
+            {goods_id:goods_id},
+            function(res){
+                // console.log(res);
+                $("#money").text('￥'+res);
+            }
+        )
+    }
+})
+</script>

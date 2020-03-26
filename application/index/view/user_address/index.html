@@ -1,0 +1,138 @@
+{include file="public/searsh"}
+<!--End Header End--> 
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+	<div class="m_content">
+   		{include file="public/left"}
+		<div class="m_right">
+            <p></p>
+            <div class="mem_tit">收货地址</div>
+        {volist name="addressInfo" id="v"}
+          <?php 
+            if($v['is_default']==1){
+              $b='border:1px solid red';
+            }else{
+              $b='';
+            }
+          ?>
+			  <div class="address" style="{:$b}">
+            	<div class="a_close">
+                <a href="{:url('addressDel')}?address_id={$v.address_id}">
+                  <img src="/static/index/images/a_close.png" />
+                </a>
+              </div>
+            	<table border="0" class="add_t" align="center" style="width:98%; margin:10px auto;" cellspacing="0" cellpadding="0">
+                 
+                  <tr>
+                    <td align="right" width="80">收货人姓名：</td>
+                    <td>{$v.address_name}</td>
+                  </tr>
+                  <tr>
+                    <td align="right">配送区域：</td>
+                    <td>{$v.province}{$v.city}{$v.area}</td>
+                  </tr>
+                  <tr>
+                    <td align="right">详细地址：</td>
+                    <td>{$v.address_detail}</td>
+                  </tr>
+                  <tr>
+                    <td align="right">手机：</td>
+                    <td>{$v.address_tel}</td>
+                  </tr>
+                  <tr>
+                    <td align="right">邮编：</td>
+                    <td>{$v.address_mail}</td>
+                  </tr>
+                 
+                </table>
+                <p align="right">
+                  {if $v['is_default']==1}
+                    <a href="{:url('exit')}?address_id={$v.address_id}" style="color:#ff4e00;">
+                      编辑
+                    </a>
+                  {else}
+                    <a href="{:url('setDefault')}?address_id={$v.address_id}" style="color:#ff4e00;">
+                      设为默认
+                    </a>
+                    &nbsp; &nbsp; &nbsp; &nbsp; 
+                    <a href="{:url('exit')}?address_id={$v.address_id}" style="color:#ff4e00;">
+                      编辑
+                    </a>
+                    &nbsp; &nbsp; &nbsp; &nbsp; 
+                  {/if}
+                </p>
+        </div>
+        {/volist}
+            <form action="{:url('save')}" method="post">
+              <table border="0" class="add_tab" style="width:930px;"  cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="135" align="right">配送地区</td>
+                  <td colspan="3" style="font-family:'宋体';">
+                    <select class="area" name="province">
+                        <option value="0" selected="selected">请选择...</option>
+                        {volist name="provinceInfo" id="v"}
+                        <option value="{$v.id}">{$v.name}</option>
+                        {/volist}
+                      </select>
+                      <select class="area" name="city">
+                        <option value="0" selected="selected">请选择...</option>
+                      </select>
+                      <select class="area" name="area">
+                        <option value="0" selected="selected">请选择...</option>
+                      </select>
+                      （必填）
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right">收货人姓名</td>
+                  <td style="font-family:'宋体';"><input type="text" class="add_ipt" name="address_name"/>（必填）</td>
+                  <td align="right">手机号</td>
+                  <td style="font-family:'宋体';"><input type="text" class="add_ipt" name="address_tel"/>（必填）</td>
+                </tr>
+                <tr>
+                  <td align="right">详细地址</td>
+                  <td style="font-family:'宋体';"><input type="text" class="add_ipt" name="address_detail"/>（必填）</td>
+                  <td align="right">邮政编码</td>
+                  <td style="font-family:'宋体';"><input type="text" class="add_ipt" name="address_mail"/></td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                      <input type="checkbox" value="1" name="is_default">设置为默认收货地址
+                    </td>
+                </tr>
+              </table>
+              <p align="right">
+                <input type="submit" value="添加">&nbsp;&nbsp;
+              </p> 
+           </form>
+
+            
+        </div>
+    </div>
+	<!--End 用户中心 End--> 
+<script>
+$(function(){
+  //给select绑定内容改变事件
+  $(document).on("change",".area",function(){
+    var _this = $(this);  //发生内容改变事件的selece
+    //把option清空
+    _this.nextAll("select").html("<option value=''>请选择...</option>");
+    //获取到当前的省份id
+    var id = _this.val();
+    $.post(
+      "{:url('getArea')}",
+      {id:id},
+      function(res){
+        var _option = "<option value=''>请选择...</option>";
+        for(var i in res){
+          _option += "<option value='"+res[i]['id']+"'>"+res[i]['name']+"</option>";
+        }
+        _this.next("select").html(_option)
+      },
+      'json'
+    )      
+  })
+})
+ 
+ 
+ </script>

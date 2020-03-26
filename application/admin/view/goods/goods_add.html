@@ -1,0 +1,171 @@
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+        </script>
+
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a href="#">首页</a>
+            </li>
+            <li class="active">商品添加</li>
+        </ul><!-- .breadcrumb -->
+    </div>
+
+    <div class="page-content">
+            <div class="row">
+            
+
+                    <div class="col-xs-12">
+                    
+                    <form class="form-horizontal" role="form" action="{:url('goods/add_do')}" method="post" enctype="multipart/form-data" >
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 商品名称 </label>
+
+                        <div class="col-sm-9">
+                            <input type="text" name="goods_name" id="form-field-1" placeholder="商品名。。 " class="col-xs-10 col-sm-5" />
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 商品价格 </label>
+
+                        <div class="col-sm-9">
+                            <input type="text" name="goods_price" id="form-field-2" placeholder="价格。。" class="col-xs-10 col-sm-5" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 商品介绍 </label>
+    
+                            <div class="col-sm-9">
+                                <input type="text" name="goods_desc" id="form-field-2" placeholder="介绍。。" class="col-xs-10 col-sm-5" />
+                            </div>
+                    </div>
+
+                    <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 商品库存 </label>
+        
+                            <div class="col-sm-9">
+                                <input type="text" name="goods_num" id="form-field-2" placeholder="库存。。" class="col-xs-10 col-sm-5" />
+                            </div>
+                    </div>
+
+                    <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 商品积分 </label>
+            
+                            <div class="col-sm-9">
+                                <input type="text" name="goods_score" id="form-field-2" placeholder="积分。。" class="col-xs-10 col-sm-5" />
+                            </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-2">商品图片</label>
+
+                        <div class="col-sm-9">
+                            <input type="file" name="goods_img" id="form-field-2"  value=""/>
+                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-2">商品相册</label>
+
+                        <div class="col-sm-9">
+                            <input type="file" name="goods_imgs[]" multiple id="form-field-2" checked  value=""/>
+                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2">是否新品</label>
+    
+                            <div class="col-sm-9">
+                                <input type="radio" name="is_new" id="form-field-2" checked  value="是"/>是
+                                <input type="radio" name="is_new" id="form-field-2"   value="否"/>否
+                                
+                            </div>
+                    </div>
+                    <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2">是否热销</label>
+    
+                            <div class="col-sm-9">
+                                <input type="radio" name="is_hot" id="form-field-2" checked  value="是"/>是
+                                <input type="radio" name="is_hot" id="form-field-2"   value="否"/>否
+                                
+                            </div>
+                    </div> 
+                    <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2">是否精品</label>
+    
+                            <div class="col-sm-9">
+                                <input type="radio" name="is_best" id="form-field-2" checked  value="是"/>是
+                                <input type="radio" name="is_best" id="form-field-2"   value="否"/>否
+                                
+                            </div>
+                    </div> 
+                    <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2">是否上架</label>
+    
+                            <div class="col-sm-9">
+                                <input type="radio" name="is_up" id="form-field-2" checked  value="是"/>是
+                                <input type="radio" name="is_up" id="form-field-2"   value="否"/>否
+                                
+                            </div>
+                    </div> 
+                    <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2">品牌id</label>
+            
+                            <div class="col-sm-9">
+                                <select name="brand_id">
+                                    <option value="">-请选择-</option>
+                                    {foreach $branddata as $k=>$v}
+                                    <option value="{$v.brand_id}">{$v.brand_name}</option>
+                                    {/foreach}
+                                </select>
+                                        
+                            </div>
+                    </div>
+                    <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2">分类id</label>
+                
+                            <div class="col-sm-9">
+                                <select name="cate_id">
+                                    <option value="">-请选择-</option>
+                                    {foreach $catedata as $k=>$v}
+                                    <option value="{$v.cate_id}">{:str_repeat("&nbsp;&nbsp;",$v['level']*3)}{$v.cate_name}</option>
+                                    {/foreach}
+                                </select>
+                                            
+                            </div>
+                    </div>
+                    
+
+                    <div class="space-4"></div>
+                
+                    <div class="clearfix form-actions">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button class="btn btn-info" type="submit">
+                                <i class="icon-ok bigger-110"></i>
+                                增加
+                            </button>
+
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn" type="reset">
+                                <i class="icon-undo bigger-110"></i>
+                                重置
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="hr hr-24"></div>
+
+
+
+                </form>
+                    </div><!-- /span -->
+                </div><!-- /row -->
+
+    </div><!-- /.page-content -->
+</div><!-- /.main-content -->
